@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+	<root>
+		<level value="INFO" />
+		<appender-ref ref="root" />
+	</root>
+	<logger name="net.paoding.rose" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="rose" />
+	</logger>
+	<logger name="org.springframework" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="krobot" />
+	</logger>
+	<logger name="com.krobot.dao" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="krobot" />
+	</logger>
+	<logger name="com.krobot.service" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="krobot" />
+	</logger>
+	<logger name="com.krobot.controllers" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="krobot" />
+	</logger>
+	<logger name="com.krobot.interceptor" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="krobot" />
+	</logger>	
+	<logger name="STDOUT" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="krobot" />
+	</logger>
+	<logger name="STDERR" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="krobot" />
+	</logger>
+
+	<appender name="root" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="/home/smarttoys/krobot_log/krobot_root.log" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<param name="maxBackupIndex" value="10" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d|%p|%c{1}|%m%n" />
+		</layout>
+	</appender>
+	<appender name="rose" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="/home/smarttoys/krobot_log/krobot_rose.log" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %t %p (%F:%L) - %m%n" />
+		</layout>
+	</appender>
+	<appender name="krobot" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="/home/smarttoys/krobot_log/krobot.log" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd-HH" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="[%d %t] [%p] [%F:%L] [%X{SessionId}] - %m%n" />
+		</layout>
+	</appender>
+	
+	<logger name="krobot.access" additivity="false">
+		<level value="info" />
+		<appender-ref ref="accessLogAppender" />
+	</logger>
+	<appender name="accessLogAppender" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="/home/smarttoys/krobot_log/krobot_access.log" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<layout class="org.apache.log4j.PatternLayout" />
+	</appender>	
+</log4j:configuration>
