@@ -23,7 +23,7 @@
 		<context:include-filter type="regex" expression=".*Interceptor" />
 	</context:component-scan>	
 
-	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	<bean id="propertyConfigurer" class="com.krobot.service.PropertyConfigurer">
 		<property name="locations">
 			<list>
 				<value>classpath:*.properties</value>
