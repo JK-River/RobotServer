@@ -40,9 +40,9 @@ public class HttpService extends BaseService implements InitializingBean {
 	private Registry<CookieSpecProvider> cookieSpecRegistry = null;
 
 	private RequestConfig requestConfig = null;
-	
-    @Autowired
-    private PropertyConfigurer propertyConfigurer;
+
+	@Autowired
+	private PropertyConfigurer propertyConfigurer;
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
@@ -56,12 +56,10 @@ public class HttpService extends BaseService implements InitializingBean {
 			}
 		}).build();
 
-		requestConfig = RequestConfig.custom().setCookieSpec("easy").setConnectionRequestTimeout(getPropertyValue(""))
-				.setSocketTimeout(10000).setConnectTimeout(2000).build();
-	}
-	
-	private int getPropertyValue(String propertyName) {
-		return Integer.parseInt(propertyConfigurer.getValue(propertyName));
+		requestConfig = RequestConfig.custom().setCookieSpec("easy")
+				.setConnectionRequestTimeout(propertyConfigurer.getIntValue("connection_request_timeout"))
+				.setSocketTimeout(propertyConfigurer.getIntValue("socket_timeout"))
+				.setConnectTimeout(propertyConfigurer.getIntValue("connection_timeout")).build();
 	}
 
 	public String post(String postUrl, Map<String, String> paramMap) {
@@ -80,10 +78,10 @@ public class HttpService extends BaseService implements InitializingBean {
 		CloseableHttpResponse response = null;
 		try {
 			HttpPost post = new HttpPost(postUrl);
-			HttpEntity entity = new UrlEncodedFormEntity(getNameValuePairs(paramMap), "UTF-8");
+			HttpEntity entity = new UrlEncodedFormEntity(getNameValuePairs(paramMap), UTF8);
 			post.setEntity(entity);
 			response = getHttpClient().execute(post);
-			return EntityUtils.toString(response.getEntity(), "UTF-8");
+			return EntityUtils.toString(response.getEntity(), UTF8);
 		} finally {
 			if (null != response) {
 				response.close();
@@ -131,11 +129,11 @@ public class HttpService extends BaseService implements InitializingBean {
 		CloseableHttpResponse response = null;
 		try {
 			HttpPost post = new HttpPost(postUrl);
-			StringEntity entity = new StringEntity(xmlData, "UTF-8");
+			StringEntity entity = new StringEntity(xmlData, UTF8);
 			entity.setContentType("text/xml");
 			post.setEntity(entity);
 			response = getHttpClient().execute(post);
-			return EntityUtils.toString(response.getEntity(), "UTF-8");
+			return EntityUtils.toString(response.getEntity(), UTF8);
 		} finally {
 			if (null != response) {
 				response.close();

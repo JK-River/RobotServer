@@ -34,9 +34,9 @@
 	
 	<bean id="jade.dataSource.com.krobot.dao" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
         <property name="driverClass" value="com.mysql.jdbc.Driver" />
-        <property name="jdbcUrl" value="jdbc:mysql://krobot12345678.mysql.rds.aliyuncs.com:3306/krobot?useUnicode=true&amp;characterEncoding=UTF-8" />
-        <property name="user" value="dbadmin" />
-        <property name="password" value="dbpassword" />
+        <property name="jdbcUrl" value="${krobot_db_url}" />
+        <property name="user" value="${krobot_db_username}" />
+        <property name="password" value="${krobot_db_password}" />
         <property name="minPoolSize" value="10" />
         <property name="initialPoolSize" value="10" />
         <property name="maxPoolSize" value="50" />
@@ -44,51 +44,6 @@
 
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">  
         <property name="defaultEncoding" value="UTF-8"/>  
-        <property name="maxUploadSize" value="200000000"/>  
+        <property name="maxUploadSize" value="${max_upload_size}"/>  
     </bean> 
-
-	<bean id="SpringJobSchedulerFactoryBean" lazy-init="false"
-		autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-		<property name="triggers">
-			<list>
-				<ref bean="syncronizeTencentVideosTrigger" />
-				<ref bean="compositeVideoTrigger" />
-			</list>
-		</property>
-	</bean>
-
-    <bean id="syncronizeTencentVideosTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
-        <property name="jobDetail">
-            <ref bean="syncronizeTencentVideos" />
-        </property>
-        <property name="cronExpression">
-            <value>0 0/5 * * * ?</value>
-            <!--<value>0 2 1 * * ?</value>-->
-        </property>
-    </bean>	
-	<bean id="syncronizeTencentVideos" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-        <property name="targetObject">
-            <ref bean="syncronizeTencentVideosSchedule" />
-        </property>
-        <property name="targetMethod">
-            <value>run</value>
-        </property>
-    </bean>
-
-    <bean id="compositeVideoTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
-        <property name="jobDetail">
-            <ref bean="compositeVideo" />
-        </property>
-        <property name="cronExpression">
-            <value>0 0 2 * * ?</value>
-        </property>
-    </bean>	
-	<bean id="compositeVideo" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-        <property name="targetObject">
-            <ref bean="compositeVideoSchedule" />
-        </property>
-        <property name="targetMethod">
-            <value>run</value>
-        </property>
-    </bean>
 </beans>
