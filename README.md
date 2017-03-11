@@ -3,6 +3,7 @@
 
 ## RobotServer架构说明
 - 基于spring + paoding-rose
+- 支持redis缓存
 
 ## RobotServer功能说明
 - 支持照片的剪辑、合成等处理
