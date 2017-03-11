@@ -19,6 +19,4 @@
 
 **2./src/main/resources/key.properties
 - 可定制参数：数据库连接url、用户名、口令等安全信息
-
-
-
+- 可定制参数：redis ip、端口、口令等安全信息，以及超时时间等配置信息
