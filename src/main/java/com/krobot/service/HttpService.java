@@ -57,7 +57,7 @@ public class HttpService extends BaseService implements InitializingBean {
 		}).build();
 
 		requestConfig = RequestConfig.custom().setCookieSpec("easy")
-				.setConnectionRequestTimeout(propertyConfigurer.getIntValue("connection_request_timeout"))
+				.setConnectionRequestTimeout(propertyConfigurer.getIntValue("connection.request.timeout"))
 				.setSocketTimeout(propertyConfigurer.getIntValue("socket_timeout"))
 				.setConnectTimeout(propertyConfigurer.getIntValue("connection_timeout")).build();
 	}
@@ -113,10 +113,10 @@ public class HttpService extends BaseService implements InitializingBean {
 				.setDefaultRequestConfig(requestConfig).build();
 	}
 
-	public String post(String postUrl, String xmlData) {
+	public String postXml(String postUrl, String xmlData) {
 		String result = null;
 		try {
-			result = httpPost(postUrl, xmlData);
+			result = httpPost(postUrl, xmlData, "text/xml");
 		} catch (ClientProtocolException e) {
 			LOGGER.error(e.getMessage(), e);
 		} catch (IOException e) {
@@ -125,12 +125,13 @@ public class HttpService extends BaseService implements InitializingBean {
 		return result;
 	}
 
-	private String httpPost(String postUrl, String xmlData) throws ClientProtocolException, IOException {
+	private String httpPost(String postUrl, String postData, String contentType) throws ClientProtocolException,
+			IOException {
 		CloseableHttpResponse response = null;
 		try {
 			HttpPost post = new HttpPost(postUrl);
-			StringEntity entity = new StringEntity(xmlData, UTF8);
-			entity.setContentType("text/xml");
+			StringEntity entity = new StringEntity(postData, UTF8);
+			entity.setContentType(contentType);
 			post.setEntity(entity);
 			response = getHttpClient().execute(post);
 			return EntityUtils.toString(response.getEntity(), UTF8);
@@ -139,5 +140,17 @@ public class HttpService extends BaseService implements InitializingBean {
 				response.close();
 			}
 		}
+	}
+
+	public String postJson(String postUrl, String jsonData) {
+		String result = null;
+		try {
+			result = httpPost(postUrl, jsonData, "application/json");
+		} catch (ClientProtocolException e) {
+			LOGGER.error(e.getMessage(), e);
+		} catch (IOException e) {
+			LOGGER.error(e.getMessage(), e);
+		}
+		return result;
 	}
 }

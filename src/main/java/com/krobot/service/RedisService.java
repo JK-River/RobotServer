@@ -27,8 +27,8 @@ public class RedisService extends BaseService {
 		return Joiner.on("-").appendTo(new StringBuilder(redisEnum.getKey()), params).toString();
 	}
 
-	public String get(RedisEnum redisEnum, Object... params) {
-		return this.get(fullKey(redisEnum, params));
+	public String get(RedisEnum redisEnum, Object... keys) {
+		return this.get(fullKey(redisEnum, keys));
 	}
 
 	public String get(final String key) {
@@ -53,8 +53,8 @@ public class RedisService extends BaseService {
 		});
 	}
 
-	public void del(final RedisEnum redisEnum, final Object... params) {
-		this.del(fullKey(redisEnum, params));
+	public void del(RedisEnum redisEnum, final Object... keys) {
+		this.del(fullKey(redisEnum, keys));
 	}
 
 	public Long del(final String key) {
@@ -62,6 +62,37 @@ public class RedisService extends BaseService {
 			@Override
 			public Long run(Jedis jedis) {
 				return jedis.del(key);
+			}
+		});
+	}
+
+	public void rpush(final RedisEnum redisEnum, final Object key, final String... values) {
+		execute(new JedisTask() {
+			@Override
+			public void run(Jedis jedis) {
+				String fullKey = fullKey(redisEnum, key);
+				jedis.rpush(fullKey, values);
+				jedis.expire(fullKey, (int) redisEnum.getExpireTime());
+			}
+		});
+	}
+
+	public String lpop(final RedisEnum redisEnum, final Object key) {
+		return execute(new JedisReturnTask<String>() {
+			@Override
+			public String run(Jedis jedis) {
+				return jedis.lpop(fullKey(redisEnum, key));
+			}
+		});
+	}
+
+	public void incr(final RedisEnum redisEnum, final Object... keys) {
+		execute(new JedisTask() {
+			@Override
+			public void run(Jedis jedis) {
+				String fullKey = fullKey(redisEnum, keys);
+				jedis.incr(fullKey);
+				jedis.expire(fullKey, (int) redisEnum.getExpireTime());
 			}
 		});
 	}
